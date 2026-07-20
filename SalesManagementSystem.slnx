@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="SalesManagementSystem.API/SalesManagementSystem.API/SalesManagementSystem.API.csproj" />
+  <Project Path="SalesManagementSystem.Data/SalesManagementSystem.Data.csproj" Id="37bcd159-eba6-489c-ba94-d9225d3da93c" />
+  <Project Path="SalesManagementSystem.Models/SalesManagementSystem.Models.csproj" Id="b75ee159-c6f9-433a-96d6-e20e76b6e9e2" />
+</Solution>

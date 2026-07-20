@@ -1,0 +1,20 @@
+# Visual Studio
+.vs/
+
+# Build output
+bin/
+obj/
+
+# User files
+*.user
+*.suo
+
+# Database local files
+*.mdf
+*.ldf
+
+# Rider / other IDEs
+.idea/
+
+# Environment variables
+.env
