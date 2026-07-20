@@ -188,15 +188,7 @@ The following C4-style diagram presents the main components of the
 system, their responsibilities and their interactions with external
 services.
 
-```
-<p align="center">
-```
-`<img src="Docs/Images/system-architecture-c4.svg"
-       alt="Sales Management System C4 Architecture Diagram"
-       width="100%">`
-```
-</p>
-```
+![System Architecture Diagram](Docs/Images/system-architecture-c4.svg)
 
 ------------------------------------------------------------------------
 
@@ -290,15 +282,7 @@ automation system.
 The following diagram presents the database entities, primary keys,
 foreign keys and relationships used by the application.
 
-```
-<p align="center">
-```
-`<img src="Docs/Images/database-entity-relationship.svg"
-       alt="Sales Management System Database Entity Relationship Diagram"
-       width="100%">`
-```
-</p>
-```
+![Database Entity Relationship Diagram](Docs/Images/database-entity-relationship.svg)
 
 ------------------------------------------------------------------------
 
@@ -437,15 +421,8 @@ The authentication system supports user registration, login,
 access-token generation, refresh-token rotation, role-based
 authorization, login auditing and temporary account lockout.
 
-```
-<p align="center">
-```
-`<img src="Docs/Images/authentication-jwt-lifecycle.svg"
-       alt="Sales Management System Authentication and JWT Lifecycle Diagram"
-       width="100%">`
-```
-</p>
-```
+![Authentication and JWT Lifecycle Diagram](Docs/Images/authentication-jwt-lifecycle.svg)
+
 ### Authentication Security Controls
 
 -   Passwords are hashed using BCrypt.
@@ -660,15 +637,8 @@ The lifecycle includes request logging, global exception handling, JWT
 authentication, role authorization, rate limiting, controller execution,
 service processing and database access.
 
-```
-<p align="center">
-```
-`<img src="Docs/Images/api-request-lifecycle.svg"
-       alt="Sales Management System API Request Lifecycle Diagram"
-       width="100%">`
-```
-</p>
-```
+![API Request Lifecycle Diagram](Docs/Images/api-request-lifecycle.svg)
+
 The pipeline is configured in the following order:
 
 1.  Swagger middleware
@@ -716,15 +686,8 @@ The project currently schedules recurring background jobs for low-stock reportin
        width="95%">
 </p>
 
-```
-<p align="center">
-```
-`<img src="Docs/Images/order-processing-and-stock-report-flow.svg"
-       alt="Sales Management System Order Processing and Stock Report Flow Diagram"
-       width="100%">`
-```
-</p>
-```
+![Order Processing and Stock Report Flow Diagram](Docs/Images/order-processing-and-stock-report-flow.svg)
+
 ## Order Processing
 
 -   Orders are created inside SQL database transactions.
