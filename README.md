@@ -974,7 +974,7 @@ Current implementation includes:
 This project was developed for educational purposes and as part of my
 software development internship at **DBHSoft**.
 
-Feel free to explore the source code and use it as a learning resource.
+Feel free to explore, use and modify the source code under the terms of the MIT License.
 
 ------------------------------------------------------------------------
 
