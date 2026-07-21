@@ -1,5 +1,15 @@
 # Sales Management System API
 
+![.NET](https://img.shields.io/badge/.NET-10-512BD4)
+
+![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core-Web_API-512BD4)
+
+![SQL Server](https://img.shields.io/badge/SQL_Server-Database-CC2927)
+
+![Docker](https://img.shields.io/badge/Docker-Container-2496ED)
+
+![License](https://img.shields.io/badge/License-MIT-green)
+
 A comprehensive **Sales Management System RESTful API** built with
 **ASP.NET Core Web API (.NET 10)** during my Software Development
 Internship at **DBHSoft**.
