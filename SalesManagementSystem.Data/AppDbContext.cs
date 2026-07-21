@@ -33,6 +33,11 @@ public class AppDbContext : DbContext
             .Property(p => p.Price)
             .HasPrecision(18, 2);
 
+        // Creates a non-clustered index for product name lookups and sorting
+        modelBuilder.Entity<Product>()
+            .HasIndex(p => p.Name)
+            .HasDatabaseName("IX_Products_Name");
+
         // Informs EF Core about the database trigger to prevent OUTPUT clause conflicts during updates
         modelBuilder.Entity<Product>()
             .ToTable(tb => tb.HasTrigger("TR_StockAudit"));

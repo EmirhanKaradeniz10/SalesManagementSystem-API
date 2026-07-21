@@ -154,6 +154,8 @@ Implemented using **Hangfire**
 -   Optimized Product Queries
 -   Pagination
 -   Efficient Database Queries
+-   Non-clustered index on `Products.Name`
+-   Optimized product name lookups and sorting using database indexing
 
 ------------------------------------------------------------------------
 
@@ -371,6 +373,7 @@ Implemented features include:
 -   LINQ Queries
 -   Entity Relationships
 -   Fluent API Configuration
+-   Fluent API Index Configuration (`Products.Name`)
 -   Database Migrations
 -   Dependency Injection
 -   Lazy Query Composition
@@ -385,6 +388,7 @@ Current project includes:
 -   SQL Views
 -   SQL Stored Procedures
 -   SQL Triggers
+-   Database Indexes
 -   100+ Source Files
 -   Layered Solution Architecture
 -   Entity Framework Core Migrations
