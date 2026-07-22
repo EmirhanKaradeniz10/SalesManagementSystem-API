@@ -58,8 +58,7 @@ public class OrderController : ControllerBase
             Message = "Order created successfully",
             Data = new
             {
-                OrderId = orderId,
-                TotalOrdersInDb = allOrders
+                OrderId = orderId
             }
         });
     }
