@@ -1,6 +1,7 @@
 # Sales Management System API
 
-![.NET](https://img.shields.io/badge/.NET-10-512BD4) ![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core-Web_API-512BD4) ![SQL Server](https://img.shields.io/badge/SQL_Server-Database-CC2927) ![Docker](https://img.shields.io/badge/Docker-Container-2496ED) ![License](https://img.shields.io/badge/License-MIT-green)
+![.NET](https://img.shields.io/badge/.NET-10-512BD4) ![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core-Web_API-512BD4) ![Azure](https://img.shields.io/badge/Azure-Deployed-0078D4) ![Azure SQL](https://img.shields.io/badge/Azure_SQL-Database-0078D4) ![SQL Server](https://img.shields.io/badge/SQL_Server-Database-CC2927) ![Docker](https://img.shields.io/badge/Docker-Container-2496ED) ![License](https://img.shields.io/badge/License-MIT-green)
+
 
 A comprehensive **Sales Management System RESTful API** built with
 **ASP.NET Core Web API (.NET 10)** during my Software Development
@@ -14,6 +15,18 @@ It demonstrates modern backend development practices including
 authentication, authorization, caching, background jobs, reporting,
 logging, exception handling, Docker containerization and clean layered
 architecture.
+
+---
+
+## Live Demo
+
+The API is deployed on Microsoft Azure and is publicly accessible.
+
+### Swagger UI
+
+https://salesmanagement-api-emirhan-epf3avcyd7gzesf7.italynorth-01.azurewebsites.net/swagger/index.html
+
+Anyone can explore and test the API directly through the Swagger interface.
 
 ------------------------------------------------------------------------
 
@@ -43,6 +56,7 @@ The project includes:
 -   Request Logging
 -   Global Exception Handling
 -   Docker Support
+-   Azure Cloud Deployment
 
 ------------------------------------------------------------------------
 
@@ -120,6 +134,7 @@ The project includes:
 -   Order Summary Reports
 -   Sales Reporting
 -   SQL View Integration
+-   SQL Stored Procedures
 
 ------------------------------------------------------------------------
 
@@ -167,7 +182,7 @@ Implemented using **Hangfire**
   ------------------- --------------------------------
   Backend             ASP.NET Core Web API (.NET 10)
   Language            C#
-  Database            Microsoft SQL Server
+  Database            Microsoft SQL Server + Azure SQL Database
   ORM                 Entity Framework Core
   Authentication      JWT + Refresh Token
   Password Hashing    BCrypt.Net
@@ -176,7 +191,7 @@ Implemented using **Hangfire**
   Excel Processing    ClosedXML
   CSV Processing      CsvHelper
   API Documentation   Swagger (OpenAPI)
-  Containerization    Docker
+  Containerization    Docker, Docker Compose
   Version Control     Git & GitHub
 
 ------------------------------------------------------------------------
@@ -759,8 +774,7 @@ Documentation includes:
 -   Authentication Support
 -   Try-It-Out Interface
 
-Swagger is automatically available when running the application in
-Development mode.
+Swagger UI is available for local development, Docker deployment and the live Azure deployment, enabling interactive API testing in all supported environments.
 
 ------------------------------------------------------------------------
 
@@ -913,6 +927,19 @@ dotnet run
 
 ------------------------------------------------------------------------
 
+# Live Deployment
+
+Production Swagger
+
+https://salesmanagement-api-emirhan-epf3avcyd7gzesf7.italynorth-01.azurewebsites.net/swagger/index.html
+
+The live deployment runs on:
+
+- Azure App Service
+- Azure SQL Database
+
+------------------------------------------------------------------------
+
 # Swagger
 
 After running the application, Swagger UI is available at:
@@ -939,7 +966,6 @@ Possible future enhancements include:
 -   Unit Testing
 -   Integration Testing
 -   CI/CD Pipeline
--   Azure Deployment
 -   Kubernetes Support
 -   Monitoring with Application Insights
 -   Advanced Reporting Dashboard
@@ -968,6 +994,12 @@ Current implementation includes:
 -   Login Audit Logging
 -   Docker Support
 -   Swagger Documentation
+-   Azure App Service Deployment
+-   Azure SQL Database
+-   SQL Views
+-   SQL Stored Procedures
+-   SQL Triggers
+-   Rate Limiting
 
 ------------------------------------------------------------------------
 
@@ -989,3 +1021,7 @@ Computer Engineering Student
 GitHub:
 
 https://github.com/EmirhanKaradeniz10
+
+Live API
+
+https://salesmanagement-api-emirhan-epf3avcyd7gzesf7.italynorth-01.azurewebsites.net/swagger/index.html
