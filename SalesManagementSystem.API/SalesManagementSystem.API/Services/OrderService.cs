@@ -27,67 +27,71 @@ public class OrderService
         _cache.Set(ProductCacheKeys.Version, version + 1);
     }
 
-    public async Task<int> CreateOrderAsync(CreateOrderRequestDto dto, string username)
+    public async Task<int> CreateOrderAsync(
+    CreateOrderRequestDto dto,
+    string username)
     {
-        // Creates a new order inside a database transaction, validates stock, and updates product inventory
+        if (dto.Products == null || dto.Products.Count == 0)
+            throw new AppException(
+                "At least one product is required.",
+                400);
 
-        using var transaction = await _context.Database.BeginTransactionAsync();
+        var user = await _context.Users
+            .FirstOrDefaultAsync(x => x.Username == username);
 
-        try
+        if (user == null)
+            throw new AppException("User not found", 404);
+
+        if (user.CustomerId == null)
+            throw new AppException(
+                "Customer account not found",
+                404);
+
+        var order = new Order
         {
-            var user = await _context.Users
-                       .FirstOrDefaultAsync(x => x.Username == username);
+            CustomerId = user.CustomerId.Value,
+            OrderDate = DateTime.UtcNow,
+            OrderDetails = new List<OrderDetail>()
+        };
 
-            if (user == null)
-                throw new AppException("User not found", 404);
-
-            if (user.CustomerId == null)
-                throw new AppException("Customer account not found", 404);
-
-            var order = new Order
-            {
-                CustomerId = user.CustomerId.Value,
-                OrderDate = DateTime.UtcNow,
-                OrderDetails = new List<OrderDetail>()
-            };
-
-            foreach (var item in dto.Products)
-            {
-                if (item.Quantity <= 0)
-                    throw new AppException("Quantity must be greater than zero.", 400);
-
-                var product = await _context.Products
-                    .FirstOrDefaultAsync(p => p.Id == item.ProductId);
-
-                if (product == null)
-                    throw new AppException($"Product not found: {item.ProductId}", 400);
-
-                if (product.Stock < item.Quantity)
-                    throw new AppException($"Insufficient stock for product: {product.Name}", 400);
-
-                product.Stock -= item.Quantity;
-
-                order.OrderDetails.Add(new OrderDetail
-                {
-                    ProductId = product.Id,
-                    Quantity = item.Quantity
-                });
-            }
-
-            _context.Orders.Add(order);
-            await _context.SaveChangesAsync();
-
-            await transaction.CommitAsync();
-
-            InvalidateProductsCache();
-
-            return order.Id;
-        }
-        catch
+        foreach (var item in dto.Products)
         {
-            await transaction.RollbackAsync();
-            throw;
+            if (item.Quantity <= 0)
+                throw new AppException(
+                    "Quantity must be greater than zero.",
+                    400);
+
+            var product = await _context.Products
+                .FirstOrDefaultAsync(p => p.Id == item.ProductId);
+
+            if (product == null)
+                throw new AppException(
+                    $"Product not found: {item.ProductId}",
+                    400);
+
+            if (product.Stock < item.Quantity)
+                throw new AppException(
+                    $"Insufficient stock for product: {product.Name}",
+                    400);
+
+            product.Stock -= item.Quantity;
+
+            order.OrderDetails.Add(new OrderDetail
+            {
+                ProductId = product.Id,
+                Quantity = item.Quantity
+            });
         }
+
+        _context.Orders.Add(order);
+
+        // EF Core automatically executes this SaveChanges
+        // operation inside a transaction.
+        await _context.SaveChangesAsync();
+
+        InvalidateProductsCache();
+
+        return order.Id;
     }
 
     public async Task<int> GetAllOrdersCountAsync()
@@ -149,6 +153,7 @@ public class OrderService
         };
     }
 
+    
     public async Task CancelOrderAsync(int orderId, string username, bool isAdmin)
     {
         // Cancels a specific order, restores product stock levels, and invalidates product cache
@@ -166,53 +171,42 @@ public class OrderService
                 throw new AppException("Customer not found", 404);
         }
 
-        using var transaction = await _context.Database.BeginTransactionAsync();
+        var query = _context.Orders
+            .Include(o => o.OrderDetails)
+            .AsQueryable();
 
-        try
+        if (!isAdmin)
         {
-            var query = _context.Orders
-                .Include(o => o.OrderDetails)
-                .AsQueryable();
-
-            if (!isAdmin)
-            {
-                query = query.Where(o => o.CustomerId == customerId);
-            }
-
-            var order = await query.FirstOrDefaultAsync(o => o.Id == orderId);
-
-            if (order == null)
-                throw new AppException("Order not found", 400);
-
-            if (order.Status == OrderStatus.Cancelled)
-                throw new AppException("Order already cancelled", 400);
-
-            if (order.Status == OrderStatus.Completed)
-                throw new AppException("Completed order cannot be cancelled", 400);
-
-            foreach (var item in order.OrderDetails)
-            {
-                var product = await _context.Products
-                    .FirstOrDefaultAsync(p => p.Id == item.ProductId);
-
-                if (product != null)
-                {
-                    product.Stock += item.Quantity;
-                }
-            }
-
-            order.Status = OrderStatus.Cancelled;
-
-            await _context.SaveChangesAsync();
-            await transaction.CommitAsync();
-
-            InvalidateProductsCache();
+            query = query.Where(o => o.CustomerId == customerId);
         }
-        catch
+
+        var order = await query.FirstOrDefaultAsync(o => o.Id == orderId);
+
+        if (order == null)
+            throw new AppException("Order not found", 400);
+
+        if (order.Status == OrderStatus.Cancelled)
+            throw new AppException("Order already cancelled", 400);
+
+        if (order.Status == OrderStatus.Completed)
+            throw new AppException("Completed order cannot be cancelled", 400);
+
+        foreach (var item in order.OrderDetails)
         {
-            await transaction.RollbackAsync();
-            throw;
+            var product = await _context.Products
+                .FirstOrDefaultAsync(p => p.Id == item.ProductId);
+
+            if (product != null)
+            {
+                product.Stock += item.Quantity;
+            }
         }
+
+        order.Status = OrderStatus.Cancelled;
+
+        await _context.SaveChangesAsync();
+
+        InvalidateProductsCache();
     }
 
     public async Task CompleteOrderAsync(int orderId)

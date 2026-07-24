@@ -66,16 +66,32 @@ builder.Services.AddControllers()
     });
 
 // DbContext 
+var connectionString =
+    builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException(
+        "ConnectionStrings:DefaultConnection is not configured.");
+
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(
+        connectionString,
+        sqlOptions =>
+        {
+            sqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 10,
+                maxRetryDelay: TimeSpan.FromSeconds(10),
+                errorNumbersToAdd: null);
+        }));
 builder.Services.AddMemoryCache();
 
 // Registers Hangfire storage and server services using the default SQL connection
-builder.Services.AddHangfire(config =>
-    config.UseSqlServerStorage(
-        builder.Configuration.GetConnectionString("DefaultConnection")));
+// only in development mode
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddHangfire(config =>
+        config.UseSqlServerStorage(connectionString));
 
-builder.Services.AddHangfireServer();
+    builder.Services.AddHangfireServer();
+}
 
 // Implements fixed window rate limiting across endpoints to prevent API abuse
 builder.Services.AddRateLimiter(options =>
@@ -265,6 +281,7 @@ app.UseAuthorization();
 // Fixed window
 app.UseRateLimiter();
 
+
 if (app.Environment.IsDevelopment())
 {
     app.UseHangfireDashboard("/hangfire", new DashboardOptions
@@ -275,8 +292,10 @@ if (app.Environment.IsDevelopment())
 }
 
 // Schedules a recurring background job to check stock limits daily at midnight (11.59)
-using (var scope = app.Services.CreateScope())
+if (app.Environment.IsDevelopment())
 {
+    using var scope = app.Services.CreateScope();
+
     var recurringJobManager =
         scope.ServiceProvider.GetRequiredService<IRecurringJobManager>();
 
